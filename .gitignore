@@ -9,4 +9,5 @@ build/
 .vscode/
 .idea/
 coverage/
-uploads/
+server/uploads/*
+!server/uploads/.gitkeep

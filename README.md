@@ -28,7 +28,15 @@ Copy the example settings files and rename them to `.env`:
 
 Then open `server/.env` and set `MONGO_URI` to your database address and `JWT_SECRET` to any long random text.
 
-## 4. Run the project
+## 4. Fill the database with sample data (optional)
+
+```bash
+npm run seed
+```
+
+This **deletes all data** and creates 1 admin, 5 departments, 5 officers, 3 students, 2 teachers and 15 sample complaints. The login emails are printed in the terminal; every account uses the password `Password@123`.
+
+## 5. Run the project
 
 ```bash
 npm run dev
