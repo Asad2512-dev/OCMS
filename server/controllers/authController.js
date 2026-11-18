@@ -2,7 +2,8 @@
 import User from '../models/User.js';
 import AppError from '../utils/AppError.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
-import { setAuthCookie, clearAuthCookie } from '../utils/token.js';
+import { setAuthCookie, clearAuthCookie, verifyToken } from '../utils/token.js';
+import { AUTH } from '../config/constants.js';
 import { userView } from '../utils/userView.js';
 import { MESSAGES } from '../config/messages.js';
 
@@ -24,6 +25,20 @@ export const logout = (req, res) => {
   clearAuthCookie(res);
   res.json({ success: true, message: MESSAGES.AUTH.LOGOUT_SUCCESS });
 };
+
+// GET /api/auth/session — like "me" but answers 200 with user:null when not logged in
+// (the app calls this on start, so the browser console stays clean for visitors).
+export const getSession = asyncHandler(async (req, res) => {
+  const token = req.cookies?.[AUTH.COOKIE_NAME];
+  let user = null;
+  if (token) {
+    try {
+      const { id } = verifyToken(token);
+      user = await User.findOne({ _id: id, isActive: true }).populate('department', 'name');
+    } catch { user = null; }
+  }
+  res.json({ success: true, message: MESSAGES.AUTH.ME, user: user ? userView(user) : null });
+});
 
 // GET /api/auth/me
 export const getMe = (req, res) => {

@@ -9,6 +9,10 @@ export default {
       fontFamily: theme.fonts,
       borderRadius: theme.radius,
       boxShadow: theme.shadows,
+      keyframes: {
+        shimmer: { '100%': { transform: 'translateX(100%)' } },
+      },
+      animation: { shimmer: 'shimmer 1.6s infinite' },
     },
   },
   plugins: [],

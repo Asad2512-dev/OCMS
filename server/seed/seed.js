@@ -35,21 +35,26 @@ const pickStatus = (ageDays) => {
 };
 
 // Builds the timeline (history, remarks) for one complaint with realistic gaps between steps.
-const buildTimeline = ({ status, createdAt, submitter, officer, admin, assign }) => {
+const buildTimeline = ({ status, createdAt, submitter, officer, admin, assign, now }) => {
+  // Squeeze the steps so the last one never lands in the future.
+  const room = Math.max(now - createdAt.getTime(), HOUR);
+  const wanted = (24 + 24 + 24 * 9) * HOUR;
+  const scale = Math.min(1, (room * 0.9) / wanted);
+  const gap = (min, max) => between(min, max) * HOUR * scale;
   const history = [{ status: STATUSES.PENDING, by: submitter._id, date: createdAt }];
   const remarks = [];
-  let t = createdAt.getTime() + between(2, 30) * HOUR; // admin reviews within ~a day
+  let t = createdAt.getTime() + gap(2, 24); // admin reviews within ~a day
   if (status === STATUSES.REJECTED) {
     history.push({ status, by: admin._id, date: new Date(t) });
     remarks.push({ by: admin._id, text: pick(data.rejectReasons), date: new Date(t) });
     return { history, remarks, last: t };
   }
   if (!assign) return { history, remarks, last: t };
-  t += between(1, 24) * HOUR;
+  t += gap(1, 24);
   history.push({ status: STATUSES.IN_PROGRESS, by: officer._id, date: new Date(t) });
   remarks.push({ by: officer._id, text: pick(data.officerRemarks), date: new Date(t) });
   if (status === STATUSES.RESOLVED) {
-    t += between(6, 24 * 9) * HOUR;
+    t += gap(6, 24 * 9);
     history.push({ status, by: officer._id, date: new Date(t) });
     remarks.push({ by: officer._id, text: pick(data.resolveRemarks), date: new Date(t) });
   }
@@ -65,7 +70,7 @@ const createComplaint = async ({ depts, officers, submitters, admin, now, ageDay
   const status = pickStatus(ageDays);
   const assign = status !== STATUSES.REJECTED && (status !== STATUSES.PENDING || rand() < 0.4);
   const [title, description] = pick(data.templates[dept.category]);
-  const { history, remarks, last } = buildTimeline({ status, createdAt, submitter, officer, admin, assign });
+  const { history, remarks, last } = buildTimeline({ status, createdAt, submitter, officer, admin, assign, now });
 
   // eslint-disable-next-line no-await-in-loop
   const c = await Complaint.create({
@@ -87,7 +92,7 @@ const addFeedback = async ({ c, submitter, last, status }) => {
   if (status !== STATUSES.RESOLVED || rand() > 0.75) return;
   const rating = Math.max(1, Math.min(5, Math.round(between(2.6, 5.4))));
   await Feedback.create({ complaint: c._id, user: submitter._id, rating, comment: pick(data.feedbackComments) });
-  await Feedback.collection.updateOne({ complaint: c._id }, { $set: { createdAt: new Date(last + DAY) } });
+  await Feedback.collection.updateOne({ complaint: c._id }, { $set: { createdAt: new Date(Math.min(last + DAY / 2, Date.now())) } });
 };
 
 // Recent activity becomes dashboard notifications so the bell isn't empty in the demo.
