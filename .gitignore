@@ -1,0 +1,12 @@
+# Files and folders Git should never save (dependencies, secrets, build output).
+node_modules/
+dist/
+build/
+.env
+.env.local
+*.log
+.DS_Store
+.vscode/
+.idea/
+coverage/
+uploads/
