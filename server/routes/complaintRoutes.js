@@ -13,6 +13,8 @@ router.use(protect);
 
 // Everyone logged in (results depend on role)
 router.get('/', R.listRules, validate, C.listComplaints);
+router.get('/track/:code', R.trackRules, validate, C.trackComplaint);
+router.post('/check-text', C.checkText);
 router.get('/:id', R.idParam, validate, C.getComplaint);
 
 // Students & teachers — uploads must be parsed before the text fields can be validated

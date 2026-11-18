@@ -56,3 +56,5 @@ export const feedbackRules = [
   body('rating').isInt({ min: RATING.MIN, max: RATING.MAX }).withMessage(V.RATING_RANGE).toInt(),
   body('comment').optional({ values: 'falsy' }).isString().trim().isLength({ max: TEXT_LIMITS.COMMENT_MAX }).withMessage(V.COMMENT_LONG),
 ];
+
+export const trackRules = [param('code').trim().matches(/^[A-Za-z]+-\d{4}-\d+$/).withMessage(V.CODE_INVALID)];

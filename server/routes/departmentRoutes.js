@@ -1,16 +1,25 @@
-// Department endpoints. For now: list departments (admin uses this to pick a department when assigning).
+// Department endpoints: list for everyone logged in, create/edit/delete for admin.
 import { Router } from 'express';
-import Department from '../models/Department.js';
-import { protect } from '../middleware/auth.js';
-import { asyncHandler } from '../utils/asyncHandler.js';
+import { body, param } from 'express-validator';
+import * as D from '../controllers/departmentController.js';
+import { protect, authorize } from '../middleware/auth.js';
+import { validate } from '../middleware/validate.js';
+import { ROLES } from '../config/constants.js';
 import { MESSAGES } from '../config/messages.js';
 
-const router = Router();
+const V = MESSAGES.VALIDATION;
+const idParam = param('id').isMongoId().withMessage(V.ID_INVALID);
+const fields = [
+  body('description').optional().isString().trim(),
+  body('isActive').optional().isBoolean().withMessage(MESSAGES.ERRORS.VALIDATION).toBoolean(),
+];
 
-// GET /api/departments — active departments, any logged-in user
-router.get('/', protect, asyncHandler(async (req, res) => {
-  const departments = await Department.find({ isActive: true }).sort('name');
-  res.json({ success: true, message: MESSAGES.DEPARTMENT.LIST, departments });
-}));
+const router = Router();
+router.use(protect);
+
+router.get('/', D.listDepartments);
+router.post('/', authorize(ROLES.ADMIN), body('name').trim().notEmpty().withMessage(V.NAME_REQUIRED), ...fields, validate, D.createDepartment);
+router.patch('/:id', authorize(ROLES.ADMIN), idParam, body('name').optional().trim().notEmpty().withMessage(V.NAME_REQUIRED), ...fields, validate, D.updateDepartment);
+router.delete('/:id', authorize(ROLES.ADMIN), idParam, validate, D.deleteDepartment);
 
 export default router;

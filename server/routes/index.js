@@ -5,6 +5,8 @@ import userRoutes from './userRoutes.js';
 import complaintRoutes from './complaintRoutes.js';
 import notificationRoutes from './notificationRoutes.js';
 import departmentRoutes from './departmentRoutes.js';
+import feedbackRoutes from './feedbackRoutes.js';
+import { analyticsRouter, reportRouter } from './analyticsRoutes.js';
 import { MESSAGES } from '../config/messages.js';
 
 const router = Router();
@@ -15,5 +17,8 @@ router.use('/users', userRoutes);
 router.use('/departments', departmentRoutes);
 router.use('/complaints', complaintRoutes);
 router.use('/notifications', notificationRoutes);
+router.use('/feedback', feedbackRoutes);
+router.use('/analytics', analyticsRouter);
+router.use('/reports', reportRouter);
 
 export default router;

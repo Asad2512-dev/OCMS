@@ -71,8 +71,8 @@ export const findComplaints = async (user, query) => {
 };
 
 // Loads one complaint the user is allowed to see, or throws 404 (we don't reveal that it exists).
-export const findVisibleComplaint = async (user, id, { populate = true } = {}) => {
-  const q = Complaint.findOne({ _id: id, ...scopeFor(user) });
+export const findVisibleComplaint = async (user, id, { populate = true, code } = {}) => {
+  const q = Complaint.findOne({ ...(code ? { complaintId: code } : { _id: id }), ...scopeFor(user) });
   const complaint = populate ? await q.populate(POPULATE) : await q;
   if (!complaint) throw new AppError(MESSAGES.COMPLAINT.NOT_FOUND, 404);
   return complaint;

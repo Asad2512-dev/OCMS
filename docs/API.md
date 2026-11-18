@@ -220,3 +220,48 @@ Notifications are created automatically when:
 6. As the admin, `GET /api/departments` and `GET /api/users?role=officer&department=<id>`, then assign the complaint.
 7. As that officer, set the status to `in_progress` and then `resolved`.
 8. As the student, check `GET /api/notifications`, then post feedback.
+
+---
+
+## Admin – users (full management)
+
+| Request | Body / query | What it does |
+|---------|--------------|--------------|
+| `GET /api/users` | `?role=&department=&search=&isActive=true&page=&limit=` | List / filter / search users |
+| `GET /api/users/<id>` | – | One user |
+| `POST /api/users` | see section 6 | Create |
+| `PATCH /api/users/<id>` | `{ "name": "…", "email": "…", "role": "officer", "department": "<id>", "rollNo": "…", "employeeId": "…" }` (any of them) | Edit |
+| `PATCH /api/users/<id>/status` | `{ "isActive": false }` | Deactivate / activate (a deactivated user can't log in) |
+| `PATCH /api/users/<id>/reset-password` | `{ "newPassword": "Reset@123" }` | Reset password |
+
+The admin can't deactivate their own account or change its role.
+
+## Admin – departments
+
+| Request | Body | What it does |
+|---------|------|--------------|
+| `GET /api/departments` | `?all=true` (admin, includes inactive) | List, with `officerCount` and `complaintCount` |
+| `POST /api/departments` | `{ "name": "Transport", "description": "University buses" }` | Create |
+| `PATCH /api/departments/<id>` | `{ "name": "…", "description": "…", "isActive": false }` | Edit / deactivate |
+| `DELETE /api/departments/<id>` | – | Delete (only when no officers or complaints use it, otherwise 409 → deactivate instead) |
+
+## Admin – analytics (MongoDB aggregation)
+Every analytics endpoint except `trend`, `yearly` and `ratings` accepts `?from=2026-01-01&to=2026-12-31`.
+
+| Request | Returns |
+|---------|---------|
+| `GET /api/analytics/summary` | totals, by status / priority / category, unassigned, resolution rate, average resolution hours, average rating |
+| `GET /api/analytics/departments` | each department's counts, resolution rate, average resolution hours, average rating |
+| `GET /api/analytics/trend` | the last 12 months: total / resolved / rejected per month |
+| `GET /api/analytics/yearly` | a summary per year |
+| `GET /api/analytics/officers` | each officer's workload (open, urgent open, resolved, average resolution hours) |
+| `GET /api/analytics/ratings` | average rating per department and the 1–5 star distribution |
+| `GET /api/analytics/me` | (officer) your own workload |
+
+## Admin – reports and feedback
+- `GET /api/reports/export?from=2026-01-01&to=2026-12-31&status=&department=` → downloads a CSV file (opens in Excel). Anonymous complaints show "Anonymous Teacher".
+- `GET /api/feedback?rating=5&page=1` → all feedback.
+
+## Extra complaint helpers
+- `GET /api/complaints/track/CMP-2026-0012` → find a complaint by its code (you only see complaints you're allowed to see).
+- `POST /api/complaints/check-text` `{ "text": "…" }` → `{ "abusive": true/false }` (used for the live warning in the form).

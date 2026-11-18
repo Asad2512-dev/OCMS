@@ -91,7 +91,7 @@ export const COMPLAINT_SORTS = {
 export const TEXT_LIMITS = { TITLE_MAX: 150, DESCRIPTION_MAX: 3000, REMARK_MAX: 1000, COMMENT_MAX: 1000, SEARCH_MAX: 100 };
 
 // Name shown instead of the submitter for anonymous complaints.
-export const ANONYMOUS_LABEL = 'Anonymous';
+export const ANONYMOUS_LABEL = 'Anonymous Teacher';
 
 export const RATING = { MIN: 1, MAX: 5 };
 
@@ -112,3 +112,11 @@ export const SECURITY = {
 
 // Helper: turns an enum object into an array of its values (for Mongoose "enum").
 export const values = (obj) => Object.values(obj);
+
+// Analytics / reports settings.
+export const ANALYTICS = {
+  TREND_MONTHS: 12,
+  TIMEZONE: 'Asia/Karachi',
+  CSV_FILENAME: 'univoice-report',
+  MAX_EXPORT_ROWS: 10000,
+};

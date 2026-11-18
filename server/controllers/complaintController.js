@@ -144,3 +144,14 @@ export const addRemark = asyncHandler(async (req, res) => {
   await notify(ownerOf(complaint), complaint._id, MESSAGES.NOTIFY.REMARK(complaint.complaintId));
   await respond(res, complaint, req.user, M.REMARK_ADDED, 201);
 });
+
+// GET /api/complaints/track/:code  — find by "CMP-2026-0001" (same visibility rules as everywhere)
+export const trackComplaint = asyncHandler(async (req, res) => {
+  const complaint = await findVisibleComplaint(req.user, null, { code: req.params.code.toUpperCase() });
+  res.json({ success: true, message: M.DETAIL, complaint: complaintView(complaint, req.user) });
+});
+
+// POST /api/complaints/check-text  { text } — live profanity warning for the form
+export const checkText = (req, res) => {
+  res.json({ success: true, message: M.TEXT_CHECKED, abusive: isAbusive(String(req.body.text || '')) });
+};

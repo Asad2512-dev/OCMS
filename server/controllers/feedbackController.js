@@ -3,7 +3,7 @@ import Feedback from '../models/Feedback.js';
 import AppError from '../utils/AppError.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { isAbusive } from '../utils/profanity.js';
-import { findVisibleComplaint } from '../services/complaintQuery.js';
+import { findVisibleComplaint, paging } from '../services/complaintQuery.js';
 import { STATUSES, ANONYMOUS_LABEL } from '../config/constants.js';
 import { MESSAGES } from '../config/messages.js';
 
@@ -36,4 +36,19 @@ export const getFeedback = asyncHandler(async (req, res) => {
     message: F.DETAIL,
     feedback: hide ? { ...feedback, user: null, userName: ANONYMOUS_LABEL } : feedback,
   });
+});
+
+// GET /api/feedback?rating=&page=&limit= — admin list of all feedback
+export const listFeedback = asyncHandler(async (req, res) => {
+  const { page, limit, skip } = paging(req.query);
+  const filter = req.query.rating ? { rating: Number(req.query.rating) } : {};
+  const [items, total] = await Promise.all([
+    Feedback.find(filter).sort('-createdAt').skip(skip).limit(limit)
+      .populate('user', 'name role')
+      .populate({ path: 'complaint', select: 'complaintId title isAnonymous department', populate: { path: 'department', select: 'name' } })
+      .lean(),
+    Feedback.countDocuments(filter),
+  ]);
+  const feedback = items.map((f) => (f.complaint?.isAnonymous ? { ...f, user: null, userName: ANONYMOUS_LABEL } : f));
+  res.json({ success: true, message: F.LIST, pagination: { page, limit, total, pages: Math.ceil(total / limit) }, feedback });
 });
