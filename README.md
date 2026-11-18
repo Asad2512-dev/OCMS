@@ -59,6 +59,8 @@ Press `Ctrl + C` in the terminal to stop.
 | Messages the server sends back               | `server/config/messages.js`          |
 | Database address, secret keys, ports         | `server/.env` and `client/.env`      |
 
+The list of server endpoints, with example requests, is in `docs/API.md`.
+
 Tip: change only the text inside quotes `'...'`, save the file, and the website updates automatically.
 
 ## Folder overview

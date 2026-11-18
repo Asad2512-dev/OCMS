@@ -46,6 +46,14 @@ export const COMPLAINT_ID = { PREFIX: 'CMP', PAD: 4 };
 
 export const RATING = { MIN: 1, MAX: 5 };
 
+export const AUTH = {
+  COOKIE_NAME: 'univoice_token',
+  COOKIE_MAX_AGE_MS: 7 * 24 * 60 * 60 * 1000, // 7 days, keep in line with JWT_EXPIRES_IN
+  PASSWORD_MIN: 6,
+  LOGIN_LIMIT_WINDOW_MS: 15 * 60 * 1000,
+  LOGIN_LIMIT_MAX: 10, // failed+successful attempts per IP per window
+};
+
 export const SECURITY = {
   BCRYPT_ROUNDS: 10,
   RATE_LIMIT_WINDOW_MS: 15 * 60 * 1000,
