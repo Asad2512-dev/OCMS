@@ -19,7 +19,7 @@ app.set('trust proxy', 1); // correct client IPs behind hosting proxies (for rat
 
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
-app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
+if (process.env.NODE_ENV !== 'test') app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.use(
   '/api',
   rateLimit({
@@ -27,6 +27,7 @@ app.use(
     max: SECURITY.RATE_LIMIT_MAX,
     standardHeaders: true,
     legacyHeaders: false,
+    skip: () => process.env.NODE_ENV === 'test',
     message: { success: false, message: MESSAGES.ERRORS.TOO_MANY_REQUESTS },
   })
 );

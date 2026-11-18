@@ -11,3 +11,4 @@ build/
 coverage/
 server/uploads/*
 !server/uploads/.gitkeep
+server/tests/results.json

@@ -9,7 +9,7 @@ const Table = ({ columns, rows = [], loading, rowKey = '_id', onRowClick, empty,
   if (!rows.length) return empty || <EmptyState title={STRINGS.table.empty} />;
 
   return (
-    <div className={cn('scrollbar-thin overflow-x-auto', className)}>
+    <div className={cn('scrollbar-thin relative overflow-x-auto', className)}>
       <table className="w-full min-w-[640px] text-left text-sm">
         <thead>
           <tr className="border-b border-surface-border bg-surface-muted/70">

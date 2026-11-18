@@ -8,5 +8,6 @@ export const loginLimiter = rateLimit({
   max: AUTH.LOGIN_LIMIT_MAX,
   standardHeaders: true,
   legacyHeaders: false,
+  skip: () => process.env.NODE_ENV === 'test', // automated tests log in many times
   message: { success: false, message: MESSAGES.AUTH.TOO_MANY_LOGINS },
 });
