@@ -57,6 +57,8 @@ Press `Ctrl + C` in the terminal to stop.
 | Any text on the website (titles, buttons…)   | `client/src/config/strings.js`       |
 | Roles, statuses, categories, departments     | `client/src/config/constants.js` **and** `server/config/constants.js` |
 | Messages the server sends back               | `server/config/messages.js`          |
+| Blocked offensive words (Urdu / Roman Urdu)  | `server/config/badWords.js`          |
+| Upload limits, page sizes, allowed status steps | `server/config/constants.js`      |
 | Database address, secret keys, ports         | `server/.env` and `client/.env`      |
 
 The list of server endpoints, with example requests, is in `docs/API.md`.

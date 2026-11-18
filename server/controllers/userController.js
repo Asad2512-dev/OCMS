@@ -1,4 +1,5 @@
 // Admin-only user management. There is no public sign-up: the admin creates every account.
+import mongoose from 'mongoose';
 import User from '../models/User.js';
 import Department from '../models/Department.js';
 import AppError from '../utils/AppError.js';
@@ -25,9 +26,11 @@ export const createUser = asyncHandler(async (req, res) => {
   res.status(201).json({ success: true, message: MESSAGES.USER.CREATED, user: userView(user) });
 });
 
-// GET /api/users  (optional ?role=student)
+// GET /api/users  (optional ?role=officer&department=<id>)
 export const listUsers = asyncHandler(async (req, res) => {
-  const filter = Object.values(ROLES).includes(req.query.role) ? { role: req.query.role } : {};
+  const filter = {};
+  if (Object.values(ROLES).includes(req.query.role)) filter.role = req.query.role;
+  if (mongoose.isValidObjectId(req.query.department)) filter.department = req.query.department;
   const users = await User.find(filter).populate('department', 'name').sort('-createdAt');
   res.json({ success: true, message: MESSAGES.USER.LIST, count: users.length, users: users.map(userView) });
 });

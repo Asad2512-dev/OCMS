@@ -1,5 +1,6 @@
 // Catches every error in one place and sends a clean JSON response. Also handles unknown routes (404).
 import { MESSAGES } from '../config/messages.js';
+import { removeRequestFiles } from '../utils/files.js';
 
 export const notFound = (req, res, next) => {
   res.status(404).json({ success: false, message: `${MESSAGES.ERRORS.NOT_FOUND}: ${req.originalUrl}` });
@@ -19,7 +20,8 @@ const normalize = (err) => {
 };
 
 // eslint-disable-next-line no-unused-vars
-export const errorHandler = (err, req, res, next) => {
+export const errorHandler = async (err, req, res, next) => {
+  await removeRequestFiles(req); // don't keep files from a failed request
   const { status, message, errors } = normalize(err);
   if (status >= 500) console.error(err);
   res.status(status).json({
