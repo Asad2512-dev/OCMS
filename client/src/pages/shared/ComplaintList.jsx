@@ -6,6 +6,7 @@ import { Plus, LayoutList, LayoutGrid, FileSearch } from 'lucide-react';
 import { Card, PageHeader, Button, Pagination, SegmentedControl, EmptyState, ErrorState } from '../../components/ui/index.js';
 import ComplaintFilters from '../../components/complaints/ComplaintFilters.jsx';
 import ComplaintTable from '../../components/complaints/ComplaintTable.jsx';
+import AssignDrawer from '../../components/complaints/AssignDrawer.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useNotifications } from '../../context/NotificationContext.jsx';
 import { useAsync } from '../../hooks/useAsync.js';
@@ -31,6 +32,7 @@ const ComplaintList = () => {
   const { params, setParam, clearAll } = useQueryParams();
   const [view, setView] = useState(readView);
   const [departments, setDepartments] = useState([]);
+  const [assigning, setAssigning] = useState(null); // complaint open in the Review & assign drawer
   const isAdmin = user.role === ROLES.ADMIN;
   const isComplainant = COMPLAINANT_ROLES.includes(user.role);
   const page = Number(params.page) || 1;
@@ -68,7 +70,8 @@ const ComplaintList = () => {
           <ComplaintFilters params={params} setParam={setParam} clearAll={clearAll} isAdmin={isAdmin} departments={departments} />
         </div>
         {error ? <ErrorState error={error} onRetry={reload} /> : (
-          <ComplaintTable complaints={data?.complaints || []} loading={loading && !data} view={view} showSubmitter={!isComplainant} empty={empty} />
+          <ComplaintTable complaints={data?.complaints || []} loading={loading && !data} view={view} showSubmitter={!isComplainant} empty={empty}
+            onAssign={isAdmin ? setAssigning : undefined} />
         )}
         {data?.pagination?.pages > 0 && (
           <div className="border-t border-surface-border">
@@ -76,6 +79,7 @@ const ComplaintList = () => {
           </div>
         )}
       </Card>
+      {isAdmin && <AssignDrawer open={!!assigning} complaint={assigning} onClose={() => setAssigning(null)} onAssigned={reload} />}
     </>
   );
 };

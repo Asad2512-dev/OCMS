@@ -1,16 +1,16 @@
 // Complaint list as a table (desktop) or cards. Columns adapt to the role.
 import { useNavigate } from 'react-router-dom';
-import { Paperclip } from 'lucide-react';
-import { Table, StatusBadge, PriorityBadge, Avatar, SkeletonRows } from '../ui/index.js';
+import { Paperclip, UserCheck } from 'lucide-react';
+import { Table, StatusBadge, PriorityBadge, Avatar, SkeletonRows, Button } from '../ui/index.js';
 import ComplaintCard from './ComplaintCard.jsx';
-import { ROUTES } from '../../config/constants.js';
+import { ROUTES, STATUSES } from '../../config/constants.js';
 import { STRINGS } from '../../config/strings.js';
 import { formatDate } from '../../utils/format.js';
 import { submitterName } from '../../utils/complaint.js';
 
 const F = STRINGS.complaint.fields;
 
-const buildColumns = (showSubmitter) => [
+const buildColumns = (showSubmitter, onAssign) => [
   {
     key: 'title', header: F.title, className: 'min-w-[16rem]',
     render: (c) => (
@@ -37,9 +37,18 @@ const buildColumns = (showSubmitter) => [
   { key: 'priority', header: F.priority, render: (c) => <PriorityBadge priority={c.priority} /> },
   { key: 'status', header: F.status, render: (c) => <StatusBadge status={c.status} /> },
   { key: 'createdAt', header: F.submittedOn, className: 'whitespace-nowrap', render: (c) => formatDate(c.createdAt) },
+  // Admin only: open the Review & assign drawer straight from the list (pending complaints).
+  onAssign && {
+    key: 'assign', header: <span className="sr-only">{STRINGS.common.actions}</span>, className: 'text-right',
+    render: (c) => (c.status === STATUSES.PENDING ? (
+      <Button size="sm" variant="secondary" icon={UserCheck} onClick={(e) => { e.stopPropagation(); onAssign(c); }}>
+        {c.assignedTo ? STRINGS.complaint.reassign : STRINGS.complaint.reviewAssign}
+      </Button>
+    ) : null),
+  },
 ].filter(Boolean);
 
-const ComplaintTable = ({ complaints, loading, view = 'table', showSubmitter, empty }) => {
+const ComplaintTable = ({ complaints, loading, view = 'table', showSubmitter, empty, onAssign }) => {
   const navigate = useNavigate();
   if (view === 'cards' && !loading) {
     if (!complaints.length) return empty;
@@ -53,7 +62,7 @@ const ComplaintTable = ({ complaints, loading, view = 'table', showSubmitter, em
   return (
     <>
       <div className="hidden md:block">
-        <Table columns={buildColumns(showSubmitter)} rows={complaints} loading={loading} empty={empty}
+        <Table columns={buildColumns(showSubmitter, onAssign)} rows={complaints} loading={loading} empty={empty}
           onRowClick={(c) => navigate(ROUTES.COMPLAINT(c._id))} />
       </div>
       <div className="md:hidden">

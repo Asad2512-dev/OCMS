@@ -131,7 +131,7 @@ const UsersPage = () => {
     { key: 'department', header: U.columns.department, render: (u) => u.department?.name || <span className="text-ink-faint">{STRINGS.common.none}</span> },
     { key: 'idNo', header: U.columns.idNo, render: (u) => <span className="font-mono text-xs">{u.rollNo || u.employeeId || STRINGS.common.none}</span> },
     { key: 'status', header: U.columns.status, render: (u) => <Badge tone={u.isActive ? 'success' : 'neutral'} dot={u.isActive ? 'bg-success' : 'bg-ink-faint'}>{u.isActive ? STRINGS.common.active : STRINGS.common.inactive}</Badge> },
-    { key: 'joined', header: U.columns.joined, className: 'whitespace-nowrap', render: (u) => formatDate(u.createdAt) },
+    { key: 'joined', header: U.columns.joined, className: 'hidden whitespace-nowrap 2xl:table-cell', render: (u) => formatDate(u.createdAt) },
     {
       key: 'actions', header: <span className="sr-only">{STRINGS.common.actions}</span>, className: 'text-right',
       render: (u) => (

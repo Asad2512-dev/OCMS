@@ -37,7 +37,7 @@ const Modal = ({ open, onClose, title, subtitle, children, footer, size = 'md', 
     <AnimatePresence>
       {open && (
         <div className={cn('fixed inset-0 z-50 flex', drawer ? 'justify-end' : 'items-end justify-center p-0 sm:items-center sm:p-4')}>
-          <motion.div className="absolute inset-0 bg-overlay backdrop-blur-[2px]" onClick={onClose}
+          <motion.div className={cn('absolute inset-0 bg-overlay', !drawer && 'backdrop-blur-[2px]')} onClick={onClose}
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} />
           <motion.div
             ref={panelRef}
