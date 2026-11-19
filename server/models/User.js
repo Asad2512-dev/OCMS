@@ -28,8 +28,14 @@ const userSchema = new mongoose.Schema(
       ref: 'Department',
       required: [function () { return this.role === ROLES.OFFICER; }, MESSAGES.VALIDATION.DEPARTMENT_REQUIRED_OFFICER],
     },
-    rollNo: { type: String, trim: true, sparse: true, unique: true },     // students
-    employeeId: { type: String, trim: true, sparse: true, unique: true }, // staff / teachers
+    rollNo: {
+      type: String, trim: true, sparse: true, unique: true,
+      required: [function () { return this.role === ROLES.STUDENT; }, MESSAGES.VALIDATION.ROLL_NO_REQUIRED],
+    },
+    employeeId: {
+      type: String, trim: true, sparse: true, unique: true,
+      required: [function () { return this.role !== ROLES.STUDENT; }, MESSAGES.VALIDATION.EMPLOYEE_ID_REQUIRED],
+    },
     isActive: { type: Boolean, default: true },
   },
   { timestamps: true }

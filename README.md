@@ -110,19 +110,21 @@ Press `Ctrl + C` in the terminal to stop.
 
 Every demo account uses the password **`Password@123`**. The login page also has one-click demo buttons. To hide them, set `VITE_SHOW_DEMO=false` in `client/.env`.
 
-| Role | Email |
-|------|-------|
-| Admin | `admin@univoice.edu.pk` |
-| Officer – Hostel | `hostel.officer@univoice.edu.pk` |
-| Officer – Library | `library.officer@univoice.edu.pk` |
-| Officer – Accounts | `accounts.officer@univoice.edu.pk` |
-| Officer – IT | `it.officer@univoice.edu.pk` |
-| Officer – Academics | `academics.officer@univoice.edu.pk` |
-| Student | `ali.student@univoice.edu.pk` |
-| Student | `ayesha.student@univoice.edu.pk` |
-| Student | `usman.student@univoice.edu.pk` |
-| Teacher | `sana.teacher@univoice.edu.pk` |
-| Teacher | `bilal.teacher@univoice.edu.pk` |
+All 11 users created by `npm run seed` are listed below, covering all four roles: admin, officer, student, and teacher.
+
+| Name | Role | Department | Email |
+|------|------|------------|-------|
+| Dr. Imran Qureshi | Admin | — | `admin@univoice.edu.pk` |
+| Tariq Mehmood | Officer | Hostel | `hostel.officer@univoice.edu.pk` |
+| Nadia Hussain | Officer | Library | `library.officer@univoice.edu.pk` |
+| Khalid Javed | Officer | Accounts | `accounts.officer@univoice.edu.pk` |
+| Faisal Iqbal | Officer | IT | `it.officer@univoice.edu.pk` |
+| Rabia Saleem | Officer | Academics | `academics.officer@univoice.edu.pk` |
+| Ali Raza | Student | — | `ali.student@univoice.edu.pk` |
+| Ayesha Khan | Student | — | `ayesha.student@univoice.edu.pk` |
+| Usman Tariq | Student | — | `usman.student@univoice.edu.pk` |
+| Dr. Sana Malik | Teacher | — | `sana.teacher@univoice.edu.pk` |
+| Prof. Bilal Ahmed | Teacher | — | `bilal.teacher@univoice.edu.pk` |
 
 ---
 
