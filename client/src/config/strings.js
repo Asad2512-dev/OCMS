@@ -94,6 +94,7 @@ export const STRINGS = {
 
   topbar: {
     searchPlaceholder: 'Search complaints or enter CMP-2026-0001…',
+    searchPlaceholderShort: 'Search…',
     notifications: 'Notifications',
     markAllRead: 'Mark all as read',
     noNotifications: 'You are all caught up',

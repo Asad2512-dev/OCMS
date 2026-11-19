@@ -39,7 +39,7 @@ const UiPreview = () => {
   const [view, setView] = useState('table');
 
   return (
-    <div className="min-h-screen bg-surface-muted">
+    <div className="min-h-screen bg-surface">
       <header className="sticky top-0 z-20 border-b border-surface-border bg-surface/80 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           <Logo />
@@ -100,7 +100,7 @@ const UiPreview = () => {
             </div>
           </Section>
           <Section title={U.sections.avatars}>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               {X.names.map((n, i) => <Avatar key={n} name={n} size={['sm', 'md', 'lg', 'xl'][i]} />)}
               <Avatar anonymous size="lg" />
             </div>

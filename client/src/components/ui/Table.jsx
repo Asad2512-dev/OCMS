@@ -8,8 +8,33 @@ const Table = ({ columns, rows = [], loading, rowKey = '_id', onRowClick, empty,
   if (loading) return <SkeletonRows cols={Math.min(columns.length, 5)} />;
   if (!rows.length) return empty || <EmptyState title={STRINGS.table.empty} />;
 
+  const clickable = (row) => onRowClick && {
+    onClick: () => onRowClick(row),
+    onKeyDown: (e) => e.key === 'Enter' && onRowClick(row),
+    tabIndex: 0,
+  };
+  const [main, ...rest] = columns;
+
   return (
-    <div className={cn('scrollbar-thin relative overflow-x-auto', className)}>
+    <>
+    {/* Phones: each row becomes a small card (first column on top, the rest as label: value). */}
+    <ul className={cn('divide-y divide-surface-border md:hidden', className)}>
+      {rows.map((row) => (
+        <li key={row[rowKey]} {...clickable(row)}
+          className={cn('space-y-2 px-4 py-4', onRowClick && 'cursor-pointer active:bg-primary-soft/40')}>
+          <div className="min-w-0 text-sm text-ink">{main.render ? main.render(row) : row[main.key]}</div>
+          <dl className="space-y-1.5">
+            {rest.map((c) => (
+              <div key={c.key} className="flex items-center justify-between gap-3 text-sm">
+                {typeof c.header === 'string' ? <dt className="shrink-0 text-ink-muted">{c.header}</dt> : <dt className="sr-only">{c.header}</dt>}
+                <dd className={cn('min-w-0 text-right text-ink-soft', typeof c.header !== 'string' && 'ml-auto')}>{c.render ? c.render(row) : row[c.key]}</dd>
+              </div>
+            ))}
+          </dl>
+        </li>
+      ))}
+    </ul>
+    <div className={cn('scrollbar-thin relative hidden overflow-x-auto md:block', className)}>
       <table className="w-full min-w-[640px] text-left text-sm">
         <thead>
           <tr className="border-b border-surface-border bg-surface-muted/70">
@@ -24,9 +49,7 @@ const Table = ({ columns, rows = [], loading, rowKey = '_id', onRowClick, empty,
           {rows.map((row) => (
             <tr
               key={row[rowKey]}
-              onClick={onRowClick ? () => onRowClick(row) : undefined}
-              onKeyDown={onRowClick ? (e) => e.key === 'Enter' && onRowClick(row) : undefined}
-              tabIndex={onRowClick ? 0 : undefined}
+              {...clickable(row)}
               className={cn('transition-colors', onRowClick && 'cursor-pointer hover:bg-primary-soft/40 focus-visible:bg-primary-soft/40')}
             >
               {columns.map((c) => (
@@ -39,6 +62,7 @@ const Table = ({ columns, rows = [], loading, rowKey = '_id', onRowClick, empty,
         </tbody>
       </table>
     </div>
+    </>
   );
 };
 export default Table;

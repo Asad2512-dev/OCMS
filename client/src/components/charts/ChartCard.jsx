@@ -15,10 +15,11 @@ export const tooltipStyle = {
 export const axisProps = { tick: { fill: theme.colors.ink.muted, fontSize: 12 }, axisLine: false, tickLine: false };
 export const gridProps = { stroke: theme.colors.surface.border, strokeDasharray: '3 3', vertical: false };
 
-const ChartCard = ({ title, subtitle, loading, empty, height = 280, children, action, className }) => (
+const ChartCard = ({ title, subtitle, loading, empty, height = 280, children, action, className, autoHeightOnMobile }) => (
   <Card className={className}>
     <CardHeader title={title} subtitle={subtitle} action={action} />
-    <div style={{ height }}>
+    {/* autoHeightOnMobile: on phones the content decides the height (e.g. donut + legend stacked). */}
+    <div style={{ '--chart-h': `${height}px` }} className={autoHeightOnMobile ? 'min-h-[var(--chart-h)] sm:h-[var(--chart-h)]' : 'h-[var(--chart-h)]'}>
       {loading ? <Skeleton className="h-full w-full rounded-xl" /> : empty ? (
         <div className="flex h-full flex-col items-center justify-center text-sm text-ink-faint">
           <BarChart3 className="mb-2 h-8 w-8" />{STRINGS.dashboard.charts.noData}

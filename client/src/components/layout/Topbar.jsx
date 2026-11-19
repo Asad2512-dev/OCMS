@@ -1,5 +1,5 @@
 // Top bar: mobile menu button, global search (text search or jump to a complaint ID), bell and user menu.
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Menu, Search } from 'lucide-react';
 import NotificationBell from './NotificationBell.jsx';
@@ -10,6 +10,14 @@ import { STRINGS } from '../../config/strings.js';
 const Topbar = ({ onMenu }) => {
   const [q, setQ] = useState('');
   const navigate = useNavigate();
+  // Shorter placeholder on small screens so it is not cut off.
+  const [small, setSmall] = useState(() => window.matchMedia('(max-width: 639px)').matches);
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 639px)');
+    const onChange = (e) => setSmall(e.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
 
   const submit = (e) => {
     e.preventDefault();
@@ -27,7 +35,7 @@ const Topbar = ({ onMenu }) => {
       <form onSubmit={submit} className="relative max-w-md flex-1" role="search">
         <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-faint" aria-hidden />
         <input
-          value={q} onChange={(e) => setQ(e.target.value)} placeholder={STRINGS.topbar.searchPlaceholder} aria-label={STRINGS.common.search}
+          value={q} onChange={(e) => setQ(e.target.value)} placeholder={small ? STRINGS.topbar.searchPlaceholderShort : STRINGS.topbar.searchPlaceholder} aria-label={STRINGS.common.search}
           className="h-10 w-full rounded-control border border-transparent bg-surface-subtle pl-9 pr-3 text-sm text-ink placeholder:text-ink-faint transition focus:border-primary focus:bg-surface focus:outline-none focus:ring-4 focus:ring-primary/10"
         />
       </form>

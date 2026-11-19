@@ -59,7 +59,7 @@ const AdminDashboard = () => {
         <ChartCard className="lg:col-span-3" title={D.charts.trend} subtitle={D.charts.trendSubtitle} loading={loading && !data} empty={!data?.trend?.some((t) => t.total)}>
           <TrendChart data={data?.trend} />
         </ChartCard>
-        <ChartCard className="lg:col-span-2" title={D.charts.byCategory} loading={loading && !data} empty={!s?.total}>
+        <ChartCard autoHeightOnMobile className="lg:col-span-2" title={D.charts.byCategory} loading={loading && !data} empty={!s?.total}>
           <CategoryDonut data={s?.byCategory} />
         </ChartCard>
         <ChartCard className="lg:col-span-3" title={D.charts.departmentPerformance} subtitle={D.charts.departmentSubtitle} loading={loading && !data} empty={!data?.departments?.length}>

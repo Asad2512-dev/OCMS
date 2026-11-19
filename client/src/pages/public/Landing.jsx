@@ -81,7 +81,6 @@ const HeroMock = () => (
 
 const Hero = () => (
   <section className="relative overflow-hidden">
-    <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,theme(colors.primary.soft),transparent_60%)]" />
     <div className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_right,theme(colors.surface.border)_1px,transparent_1px),linear-gradient(to_bottom,theme(colors.surface.border)_1px,transparent_1px)] bg-[size:48px_48px] opacity-40 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" />
     <div className="mx-auto grid max-w-6xl items-center gap-16 px-4 pb-24 pt-16 sm:px-6 lg:grid-cols-2 lg:pt-24">
       <div>
@@ -212,7 +211,7 @@ const Footer = () => (
 );
 
 const Landing = () => (
-  <div className="min-h-screen bg-surface-muted">
+  <div className="min-h-screen bg-surface">
     <Nav />
     <main>
       <Hero />

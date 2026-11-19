@@ -12,7 +12,7 @@ const ErrorPage = ({ code, title, text, icon: Icon }) => {
   const { user } = useAuth();
   const E = STRINGS.errorPages;
   return (
-    <div className="flex min-h-screen flex-col bg-surface-muted">
+    <div className="flex min-h-screen flex-col bg-surface">
       <div className="p-6"><Link to={ROUTES.HOME}><Logo /></Link></div>
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="m-auto max-w-md px-6 pb-24 text-center">
         <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-soft text-primary ring-8 ring-primary-soft/50"><Icon className="h-8 w-8" /></div>
